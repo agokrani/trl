@@ -789,10 +789,11 @@ class DPOTrainer(Trainer):
             The losses tensor contains the DPO loss for each example in the batch.
             The chosen_rewards and rejected_rewards tensors contain the rewards for the chosen and rejected responses, respectively.
         """
-        policy_chosen_logps = policy_chosen_logps.to(self.accelerator.device)
-        policy_rejected_logps = policy_rejected_logps.to(self.accelerator.device)
-        reference_chosen_logps = reference_chosen_logps.to(self.accelerator.device)
-        reference_rejected_logps = reference_rejected_logps.to(self.accelerator.device)
+        device = torch.device('cuda:0')
+        policy_chosen_logps = policy_chosen_logps.to(device)
+        policy_rejected_logps = policy_rejected_logps.to(device)
+        reference_chosen_logps = reference_chosen_logps.to(device)
+        reference_rejected_logps = reference_rejected_logps.to(device)
         pi_logratios = policy_chosen_logps - policy_rejected_logps
         if reference_free:
             ref_logratios = 0
