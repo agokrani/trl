@@ -789,6 +789,10 @@ class DPOTrainer(Trainer):
             The losses tensor contains the DPO loss for each example in the batch.
             The chosen_rewards and rejected_rewards tensors contain the rewards for the chosen and rejected responses, respectively.
         """
+        policy_chosen_logps = policy_chosen_logps.to(self.accelerator.device)
+        policy_rejected_logps = policy_rejected_logps.to(self.accelerator.device)
+        reference_chosen_logps = reference_chosen_logps.to(self.accelerator.device)
+        reference_rejected_logps = reference_rejected_logps.to(self.accelerator.device)
         pi_logratios = policy_chosen_logps - policy_rejected_logps
         if reference_free:
             ref_logratios = 0
@@ -907,8 +911,7 @@ class DPOTrainer(Trainer):
             average_log_prob=False,
             is_encoder_decoder=self.is_encoder_decoder,
             label_pad_token_id=self.label_pad_token_id,
-        ).to(device=self.accelerator.device)
-
+        )
         chosen_logps = all_logps[:len_chosen]
         rejected_logps = all_logps[len_chosen:]
 
