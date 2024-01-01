@@ -907,7 +907,7 @@ class DPOTrainer(Trainer):
             average_log_prob=False,
             is_encoder_decoder=self.is_encoder_decoder,
             label_pad_token_id=self.label_pad_token_id,
-        )
+        ).to(device=self.accelerator.device)
 
         chosen_logps = all_logps[:len_chosen]
         rejected_logps = all_logps[len_chosen:]
