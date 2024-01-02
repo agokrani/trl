@@ -995,10 +995,11 @@ class DPOTrainer(Trainer):
         # force log the metrics
         if self.accelerator.is_main_process:
             self.store_metrics(metrics, train_eval="train")
-
+        loss = loss.to(self.accelerator.device)
+        print(loss.get_device())
         if return_outputs:
-            return (loss.to(self.accelerator.device), metrics)
-        return loss.to(self.accelerator.device)
+            return (loss, metrics)
+        return loss
 
     def get_batch_samples(self, model, batch: Dict[str, torch.LongTensor]) -> Tuple[str, str]:
         """Generate samples from the model and reference model for the given batch of inputs."""
